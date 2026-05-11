@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class PasDeVoitureException extends Exception {
 
     public PasDeVoitureException(){
-        super("Pas de voiture pour calculer les statistiques !");
+        super("Pas de voiture pour calculer les statistiques");
     }
 
 }

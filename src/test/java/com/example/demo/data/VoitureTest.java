@@ -1,66 +1,62 @@
 package com.example.demo.data;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
 
-@ExtendWith(MockitoExtension.class)
+
+@SpringBootTest
 public class VoitureTest {
 
-    @Test
-    void creerVoiture() {
-        Voiture spy = spy(new Voiture("Toyota", 15000));
+    private Voiture voiture;
+    private Voiture voitureVide;
+    private Voiture voiture2;
 
-        assertEquals("Toyota", spy.getMarque());
-        assertEquals(15000, spy.getPrix());
-
-        verify(spy, times(1)).getMarque();
-        verify(spy, times(1)).getPrix();
+    @BeforeEach
+    public void init()
+    {
+        this.voiture = new Voiture("Audi", 10000);
+        this.voitureVide = new Voiture();
+        this.voiture2 = new Voiture("Opel", 5000);
     }
 
     @Test
-    void modifierMarque() {
-        Voiture spy = spy(new Voiture("Toyota", 15000));
-        spy.setMarque("Renault");
-
-        assertEquals("Renault", spy.getMarque());
-
-        verify(spy, times(1)).setMarque("Renault");
-        verify(spy, times(1)).getMarque();
+    public void creerVoiture(){
+        assertNotNull(this.voiture);
+        assertEquals("Audi", this.voiture.getMarque());
+        assertEquals(10000, this.voiture.getPrix());
     }
 
     @Test
-    void modifierPrix() {
-        Voiture spy = spy(new Voiture("Toyota", 15000));
-        spy.setPrix(20000);
-
-        assertEquals(20000, spy.getPrix());
-
-        verify(spy, times(1)).setPrix(20000);
-        verify(spy, times(1)).getPrix();
+    public void creerVoitureVide(){
+        assertNull(this.voitureVide.getMarque());
+        assertEquals(0, this.voitureVide.getPrix());
+        assertEquals(0, this.voitureVide.getId());
     }
 
     @Test
-    void modifierId() {
-        Voiture spy = spy(new Voiture("Toyota", 15000));
-        spy.setId(5);
-
-        assertEquals(5, spy.getId());
-
-        verify(spy, times(1)).setId(5);
-        verify(spy, times(1)).getId();
+    public void ajouterId(){
+        this.voiture.setId(2);
+        assertEquals(2, this.voiture.getId());
     }
 
     @Test
-    void verifierToString() {
-        Voiture spy = spy(new Voiture("Toyota", 15000));
-        spy.setId(1);
+    public void ajouterMarque(){
+        this.voitureVide.setMarque("Mercedes");
+        assertEquals("Mercedes", this.voitureVide.getMarque());
+    }
 
-        assertEquals("Car{marque='Toyota', prix=15000, id=1}", spy.toString());
+    @Test
+    public void ajouterPrix(){
+        this.voitureVide.setPrix(20000);
+        assertEquals(20000, this.voitureVide.getPrix());
+    }
 
-        verify(spy, atLeastOnce()).toString();
+    @Test
+    public void afficherVoiture(){
+        assertEquals("Car{marque='Opel', prix=5000, id=0}", this.voiture2.toString());
     }
 }

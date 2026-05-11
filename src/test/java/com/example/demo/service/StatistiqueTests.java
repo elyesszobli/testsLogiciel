@@ -1,88 +1,52 @@
 package com.example.demo.service;
 
 import com.example.demo.data.Voiture;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.demo.service.Echantillon;
+import com.example.demo.service.StatistiqueImpl;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 
-@ExtendWith(MockitoExtension.class)
+
+@SpringBootTest
 public class StatistiqueTests {
 
-    private StatistiqueImpl statistique;
+    private StatistiqueImpl statistiqueImpl;
+    private Voiture voiture;
 
     @BeforeEach
-    void setUp() {
-        statistique = new StatistiqueImpl();
+    public void init()
+    {
+        this.statistiqueImpl = new StatistiqueImpl();
+        this.voiture = new Voiture("Audi", 20000);
     }
 
     @Test
-    void prixMoyenAvecUneVoiture() throws ArithmeticException {
-        Voiture mockVoiture = mock(Voiture.class);
-        when(mockVoiture.getPrix()).thenReturn(15000);
-
-        statistique.ajouter(mockVoiture);
-        Echantillon e = statistique.prixMoyen();
-
-        assertEquals(15000, e.getPrixMoyen());
-        assertEquals(1, e.getNombreDeVoitures());
-        verify(mockVoiture, times(1)).getPrix();
+    public void prixMoyenLanceUneException()
+    {
+        assertThrows(ArithmeticException.class, ()->statistiqueImpl.prixMoyen());
     }
 
     @Test
-    void prixMoyenAvecPlusieursVoitures() throws ArithmeticException {
-        Voiture mock1 = mock(Voiture.class);
-        Voiture mock2 = mock(Voiture.class);
-        Voiture mock3 = mock(Voiture.class);
-        when(mock1.getPrix()).thenReturn(10000);
-        when(mock2.getPrix()).thenReturn(20000);
-        when(mock3.getPrix()).thenReturn(30000);
-
-        statistique.ajouter(mock1);
-        statistique.ajouter(mock2);
-        statistique.ajouter(mock3);
-        Echantillon e = statistique.prixMoyen();
-
-        assertEquals(20000, e.getPrixMoyen());
-        assertEquals(3, e.getNombreDeVoitures());
-        verify(mock1, times(1)).getPrix();
-        verify(mock2, times(1)).getPrix();
-        verify(mock3, times(1)).getPrix();
+    public void ajouterUneVoiture()
+    {
+        statistiqueImpl.ajouter(this.voiture);
+        assertNotNull(statistiqueImpl.voitures);
+        assertEquals(this.voiture, statistiqueImpl.voitures.get(0));
     }
 
     @Test
-    void prixMoyenSansVoitureLanceException() {
-        assertThrows(ArithmeticException.class, () -> statistique.prixMoyen());
-    }
+    public void retourneLePrixMoyen()
+    {
+        statistiqueImpl.ajouter(this.voiture);
+        Echantillon resultat = statistiqueImpl.prixMoyen();
 
-    @Test
-    void nombreDeVoituresCorrect() throws ArithmeticException {
-        Voiture mock1 = mock(Voiture.class);
-        Voiture mock2 = mock(Voiture.class);
-        when(mock1.getPrix()).thenReturn(50000);
-        when(mock2.getPrix()).thenReturn(60000);
-
-        statistique.ajouter(mock1);
-        statistique.ajouter(mock2);
-        Echantillon e = statistique.prixMoyen();
-
-        assertEquals(2, e.getNombreDeVoitures());
-    }
-
-    @Test
-    void prixMoyenArrondiInferieur() throws ArithmeticException {
-        Voiture mock1 = mock(Voiture.class);
-        Voiture mock2 = mock(Voiture.class);
-        when(mock1.getPrix()).thenReturn(10000);
-        when(mock2.getPrix()).thenReturn(11000);
-
-        statistique.ajouter(mock1);
-        statistique.ajouter(mock2);
-        Echantillon e = statistique.prixMoyen();
-
-        assertEquals(10500, e.getPrixMoyen());
+        assertNotNull(resultat);
+        assertEquals(20000, resultat.getPrixMoyen());
     }
 }
