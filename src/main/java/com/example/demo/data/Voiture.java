@@ -1,11 +1,10 @@
 package com.example.demo.data;
-
+//...
 public class Voiture {
 
     String marque;
     int prix;
     int id;
-    int i;
 
     public Voiture(){
     }
@@ -30,7 +29,7 @@ public class Voiture {
     public void setMarque(String marque) {
         this.marque = marque;
     }
-
+    
     public int getPrix() {
         return prix;
     }
