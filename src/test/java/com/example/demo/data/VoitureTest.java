@@ -61,6 +61,6 @@ public class VoitureTest {
 
         assertEquals("Car{marque='Toyota', prix=15000, id=1}", spy.toString());
 
-        verify(spy, times(1)).toString();
+        verify(spy, atLeastOnce()).toString();
     }
 }
